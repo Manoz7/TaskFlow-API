@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Description
+Project IDEA.docx
+
+
 # Distribution / packaging
 .Python
 build/

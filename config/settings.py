@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     'comments',
     'tasks',
     'users',
@@ -136,3 +138,30 @@ STATIC_URL = 'static/'
 
 # Auth User
 AUTH_USER_MODEL = "users.User"
+
+# JWt attentication
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+
+    "DEFAULT_SCHEMA_CLASS": (
+        "drf_spectacular.openapi.AutoSchema"
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "TaskFlow API",
+    "DESCRIPTION": "Project Management API",
+    "VERSION": "1.0.0",
+
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+}

@@ -22,3 +22,15 @@ class RegisterSerializer(serializers.ModelSerializer):
             role=validated_data["role"],
         )
         return user
+    
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "role",
+            "created_at",
+        ]

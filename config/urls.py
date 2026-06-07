@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -8,6 +9,8 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
+
+    path("", RedirectView.as_view(url="/api/docs/", permanent=False)),
     path('admin/', admin.site.urls),
 
     path(
@@ -40,4 +43,6 @@ urlpatterns = [
         ),
         name="redoc"
     ),
+
+    path("api/", include("projects.urls")),
 ]

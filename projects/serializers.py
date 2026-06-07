@@ -36,7 +36,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             name__iexact=value
         )
 
-        if self.isinstance:
+        if self.instance:
             queryset = queryset.exclude(
                 pk=self.instance.pk
             )
@@ -47,7 +47,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             )
 
         return value
-
+ 
 
     def validate(self, attrs):
         start_date = attrs.get("start_date")

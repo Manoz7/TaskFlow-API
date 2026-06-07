@@ -30,8 +30,16 @@ class TaskSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        project = attrs.get("project")
-        assignee = attrs.get("assignee")
+
+        project = attrs.get(
+            "project",
+            self.instance.project if self.instance else None
+        )
+
+        assignee = attrs.get(
+            "assignee",
+            self.instance.assignee if self.instance else None
+        )
 
         if assignee and project:
             if assignee not in project.members.all():
@@ -40,3 +48,45 @@ class TaskSerializer(serializers.ModelSerializer):
                 )
 
         return attrs
+    
+    def validate_status(self, value):
+
+        if not self.instance:
+            return value
+
+        request = self.context.get("request")
+
+        # Admin and Manager can override workflow
+        if (
+            request
+            and request.user.role in ["ADMIN", "MANAGER"]
+        ):
+            return value
+
+        current_status = self.instance.status
+
+        allowed_transitions = {
+            "TODO": ["IN_PROGRESS"],
+
+            "IN_PROGRESS": [
+                "BLOCKED",
+                "COMPLETED"
+            ],
+
+            "BLOCKED": [
+                "IN_PROGRESS"
+            ],
+
+            "COMPLETED": []
+        }
+
+        if value != current_status:
+
+            if value not in allowed_transitions[current_status]:
+
+                raise serializers.ValidationError(
+                    f"Cannot move task from "
+                    f"{current_status} to {value}"
+                )
+
+        return value

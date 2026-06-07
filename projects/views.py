@@ -10,6 +10,8 @@ from users.permissions import IsAdminOrManager
 from .permissions import IsProjectOwnerOrAdmin
 from rest_framework.exceptions import PermissionDenied
 
+from activity.utils import log_activity
+
 
 class ProjectViewSet(viewsets.ModelViewSet):
 
@@ -41,4 +43,21 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 "Only Admins and Managers can create projects."
             )
 
-        serializer.save()
+        project = serializer.save()
+
+        log_activity(
+            user=self.request.user,
+            project=project,
+            action = "Project Created"
+        )
+
+    
+    def perform_update(self, serializer):
+
+        project = serializer.save()
+
+        log_activity(
+            user=self.request.user,
+            project=project,
+            action="Project updated"
+        )

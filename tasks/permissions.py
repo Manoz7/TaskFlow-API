@@ -11,11 +11,23 @@ class CanManageTask(BasePermission):
 
     def has_permission(self, request, view):
 
-        if request.method in ["POST", "PUT", "PATCH", "DELETE"]:
-
+        if request.method == "POST":
             return request.user.role in [
                 "ADMIN",
                 "MANAGER"
             ]
 
         return True
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.user.role in [
+            "ADMIN",
+            "MANAGER"
+        ]:
+            return True
+
+        if request.method in ["PUT", "PATCH"]:
+            return obj.assignee == request.user
+
+        return False

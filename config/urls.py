@@ -13,11 +13,6 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/api/docs/", permanent=False)),
     path('admin/', admin.site.urls),
 
-    path(
-        "api/auth/",
-        include("users.urls")
-    ),
-
     # Swagger
     # OpenAPI Schema
     path(
@@ -44,6 +39,9 @@ urlpatterns = [
         name="redoc"
     ),
 
-    path("api/", include("projects.urls")),
-    path("api/", include("tasks.urls")),
+    path("api/users/", include("users.urls")),
+    path("api/projects/", include("projects.urls")),
+    path("api/tasks/", include("tasks.urls")),
+    path("api/comments/", include("comments.urls")),
+    path("api/activity-logs/", include("activity.urls")),
 ]
